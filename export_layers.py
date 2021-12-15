@@ -197,7 +197,7 @@ class LayerExport(inkex.Effect):
                 if self.options.enumerate:
                     layer_name = '{:03d}_{}'.format(counter + 1, layer_name)
 
-                export_list.append(Export(visible_layers, layer_name))
+                export_list.append(Export(visible_layers, layer_name.replace(" ", "_")))
             else:
                 #layers not marked as FIXED of EXPORT are ignored
                 pass
@@ -263,14 +263,14 @@ class LayerExport(inkex.Effect):
         output_file = os.path.join(output_dir, prefix+source_file_name + '.svg')
         command = [
             'inkscape',
-            svg_file.encode('utf-8'),    
+            svg_file,
             '--batch-process', 
             '--export-area-drawing' if self.options.fit_contents else 
             '--export-area-page',
             '--export-dpi', str(self.options.dpi),
             '--export-plain-svg', 
             '--vacuum-defs',
-            '--export-filename',output_file.encode('utf-8')
+            '--export-file',output_file
         ]
         result = subprocess.run(command, capture_output=True)
         if result.returncode != 0:
